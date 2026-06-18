@@ -19,7 +19,6 @@ class BasePage:
 
     def fill(self, locator: Locator, text: str) -> None:
         logger.info(f"Filling '{text}' on: {locator}")
-        locator.click()
         locator.fill(text)
 
     def get_text(self, locator: Locator) -> str:

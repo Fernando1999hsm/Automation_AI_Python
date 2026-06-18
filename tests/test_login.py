@@ -23,8 +23,8 @@ class TestLogin:
         """TC_LOG_002"""
         self.login_page.login(TestData.problem_user)
         self.inventory_page.should_be_on_inventory_page()
-        self.inventory_page.should_item_images_be_visible("4", "0", "1", "5")
-        self.inventory_page.should_item_descriptions_be_visible(4)
+        self.inventory_page.should_item_images_be_visible("4", "0", "1", "5", "2", "3")
+        self.inventory_page.should_item_descriptions_be_visible(6)
         self.inventory_page.add_item_to_cart("sauce-labs-bike-light")
         self.inventory_page.should_show_cart_badge("1")
 
