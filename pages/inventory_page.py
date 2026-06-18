@@ -1,6 +1,7 @@
 from playwright.sync_api import Page, expect
 import re
 from pages.base_page import BasePage
+from utils.logger import logger
 
 
 class InventoryPage(BasePage):
@@ -8,6 +9,10 @@ class InventoryPage(BasePage):
     INVENTORY_ITEM = "[data-test=\"inventory-item\"]"
     ITEM_DESCRIPTION = "[data-test=\"inventory-item-description\"]"
     SHOPPING_CART_BADGE = "[data-test=\"shopping-cart-badge\"]"
+    PRODUCT_SORT_CONTAINER = "[data-test=\"product-sort-container\"]"
+    INVENTORY_ITEM_NAME = "[data-test=\"inventory-item-name\"]"
+    INVENTORY_ITEM_DESC = "[data-test=\"inventory-item-desc\"]"
+    INVENTORY_ITEM_PRICE = "[data-test=\"inventory-item-price\"]"
 
     def __init__(self, page: Page) -> None:
         super().__init__(page)
@@ -44,3 +49,22 @@ class InventoryPage(BasePage):
     def should_show_cart_badge(self, expected_text: str) -> None:
         expect(self.page.locator(self.SHOPPING_CART_BADGE)).to_be_visible()
         expect(self.page.locator(self.SHOPPING_CART_BADGE)).to_contain_text(expected_text)
+
+    def select_sort_option(self, option: str) -> None:
+        logger.info(f"Selecting sort option: {option}")
+        self.page.locator(self.PRODUCT_SORT_CONTAINER).select_option(option)
+
+    def should_have_sort_value(self, expected_value: str) -> None:
+        expect(self.page.locator(self.PRODUCT_SORT_CONTAINER)).to_have_value(expected_value)
+
+    def should_item_have_name(self, index: int, expected_name: str) -> None:
+        item = self.page.locator(self.INVENTORY_ITEM).nth(index)
+        expect(item.locator(self.INVENTORY_ITEM_NAME)).to_have_text(expected_name)
+
+    def should_item_details_be_visible(self, index: int) -> None:
+        item = self.page.locator(self.INVENTORY_ITEM).nth(index)
+        expect(item.locator(self.INVENTORY_ITEM_NAME)).to_be_visible()
+        expect(item.locator(self.INVENTORY_ITEM_DESC)).to_be_visible()
+        expect(item.locator(self.INVENTORY_ITEM_PRICE)).to_be_visible()
+        expect(item.locator("img")).to_be_visible()
+        expect(item.locator("[data-test^=\"add-to-cart\"]")).to_be_visible()
